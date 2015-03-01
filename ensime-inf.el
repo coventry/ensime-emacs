@@ -61,12 +61,6 @@
   :group 'ensime
   :prefix "ensime-inf-")
 
-(defcustom ensime-inf-cmd-template '("scala" "-classpath" :classpath)
-  "The command to launch the scala interpreter. Keywords will be replaced
-with data loaded from server."
-  :type 'string
-  :group 'ensime-inf)
-
 (defcustom ensime-inf-default-cmd-line '("scala")
   "Default command to launch the repl, used when not connected to an ENSIME
 server."
@@ -151,9 +145,8 @@ server."
   "Get the command needed to launch a repl, including all
 the current project's dependencies. Returns list of form (cmd [arg]*)"
   (if (and (ensime-connected-p) (ensime-analyzer-ready))
-      (ensime-replace-keywords
-       ensime-inf-cmd-template
-       (ensime-rpc-repl-config))
+      `("java" "-classpath" ,(ensime-classpath)
+	"scala.tools.nsc.MainGenericRunner")
     ensime-inf-default-cmd-line))
 
 (defun ensime-inf-switch ()

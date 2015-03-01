@@ -123,6 +123,14 @@
     (lambda (m) (plist-get m :source-roots))
     (plist-get (ensime-config (ensime-connection)) :subprojects))))
 
+(defun ensime-classpath (&optional force-dir)
+  (let ( (config (ensime-config-load (ensime-config-find) force-dir)))
+    (mapconcat
+     'identity
+     (mapcar (lambda (p) (mapconcat 'identity (plist-get p :compile-deps) ":"))
+	     (plist-get config :subprojects))
+     ":")))
+
 (provide 'ensime-config)
 
 ;; Local Variables:
